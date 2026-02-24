@@ -15,11 +15,7 @@ from vkbled import VKBDevice, LEDConfig, LEDId, ColorMode, LEDMode
 # globals
 parse_retries = 5
 last_timestamp = datetime.min.replace(tzinfo=timezone.utc)
-try:
-    device = VKBDevice(0x0204)
-except RuntimeError as e:
-    print(f'\n{e} - exiting\n')
-    sys.exit(1)
+device = None
 
 
 class FSEventHandler(FileSystemEventHandler):
@@ -130,6 +126,12 @@ if __name__ == '__main__':
                         default="C:\\Users\\steal\\Saved Games\\Frontier Developments\\Elite Dangerous\\Status.json",
                         help="path to status.json file")
     args = parser.parse_args()
+
+    try:
+        device = VKBDevice(0x0204)
+    except RuntimeError as e:
+        print(f'\n{e} - exiting\n')
+        sys.exit(1)
 
     read_file(args.file_path)
 
